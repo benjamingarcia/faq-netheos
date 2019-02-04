@@ -11,9 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -63,21 +61,23 @@ public class FaqControllerTest {
     public void testAddFaq() throws JsonProcessingException {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-
         //Creating http entity object with request body and headers
         HttpEntity<String> httpEntity =
                 new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(getStarWars()), requestHeaders);
 
         //Invoking the API
-        Faq apiResponse =
-                restTemplate.postForObject("/faq", httpEntity, Faq.class);
+        ResponseEntity<Faq> apiResponse = restTemplate
+                .withBasicAuth("spike", "gremlins")
+                .postForEntity("/faq", httpEntity, Faq.class);
 
-        assertEquals("La guerre des etoiles", apiResponse.getAnswer());
+        assertEquals(HttpStatus.OK, apiResponse.getStatusCode());
+        assertEquals("La guerre des etoiles", apiResponse.getBody().getAnswer());
     }
 
     @Test
     public void testListFaq(){
-        List apiResponse = restTemplate.getForObject("/faq", List.class);
+        List apiResponse = restTemplate.withBasicAuth("spike", "gremlins")
+                .getForObject("/faq", List.class);
 
         assertNotNull(apiResponse);
         assertEquals(3, apiResponse.size());
@@ -89,7 +89,8 @@ public class FaqControllerTest {
 
     @Test
     public void testSearch01Faq(){
-        List apiResponse = restTemplate.getForObject("/faq/search?search=java", List.class);
+        List apiResponse = restTemplate.withBasicAuth("guizmo", "mogwai")
+                .getForObject("/faq/search?search=java", List.class);
         assertNotNull(apiResponse);
         assertEquals(1, apiResponse.size());
         assertEquals("what is java?", ((LinkedHashMap) apiResponse.get(0)).get("question"));
@@ -97,7 +98,8 @@ public class FaqControllerTest {
 
     @Test
     public void testSearch02Faq(){
-        List apiResponse = restTemplate.getForObject("/faq/search?search=what", List.class);
+        List apiResponse = restTemplate.withBasicAuth("guizmo", "mogwai")
+                .getForObject("/faq/search?search=what", List.class);
         assertNotNull(apiResponse);
         assertEquals(2, apiResponse.size());
         assertEquals("what is java?", ((LinkedHashMap) apiResponse.get(0)).get("question"));
