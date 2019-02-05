@@ -39,7 +39,9 @@ public class FaqController {
     @GetMapping(value = "/faq/search")
     public ResponseEntity<List<Faq>> searchFaq(@RequestParam("search") String search){
         List<Faq> faqs = faqRepository.getFaqs()
-                .stream().filter(faq -> faq.getAnswer().contains(search) || faq.getQuestion().contains(search))
+                .stream().filter(faq -> faq.getAnswer().contains(search)
+                        || faq.getQuestion().contains(search)
+                        || String.join(",", faq.getTags()).contains(search))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(faqs, HttpStatus.OK);
     }
