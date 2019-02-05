@@ -1,0 +1,62 @@
+= Faq Netheos
+Benjamin Garcia <benjamin.garcia@protonmail.com>
+
+== Architecture
+
+L'application est construite sur le framework SpringBoot, en JDK9
+Nous avons un `controller`, un `repository` et le `DTO` qui sera une image d'une question dans le FAQ:
+
+.Faq.java
+[source,java]
+-----
+include::./src/main/java/org/bga/netheos/faqnetheos/dto/Faq.java[]
+-----
+
+Le `controller` contient trois méthodes qui remplissent chacune une des _user story_ :
+
+.routes
+|===
+|route HTTP |méthode HTTP | valeur de retour
+
+|`/faq`
+|`GET`
+|la liste des faq. Une liste vide si il n'y a aucun élément
+
+
+|`/faq`
+|`POST`
+|la FAQ ajouté
+
+|`/faq/search?search=<marecherche>`
+|`GET`
+|la liste des FAQ filtré par la recherche
+|===
+
+
+== La sécurité
+
+L'application contient un système d'authentification et d'autorisation grâce à `spring-security`.
+Comme pour les données, les utilisateurs sont _in memory_ pour l'exercice.
+Ainsi, pour l'exemple, nous avons _guizmo_ qui est un simple utilisateur et qui pourras faire des recherches dans la FAQ. L'autre utilisateur sera _spike_.
+Il sera administrateur de la plate-forme et pourra ajouter une question ou liste la FAQ complète.
+
+L'authentification se fait en Basic Auth.
+
+== Test unitaire
+
+Une classe permet de tester chacun des appels avec une authentification (bonne ou mauvaise) et ainsi assurer la conformité des codes http retournés.
+
+== How to
+
+Pour build, aller dans le répertoire de l'application et exécuter la commande suivante: `./mvnw package`.
+
+Ensuite, télécharger `tomcat` https://tomcat.apache.org/download-90.cgi[ici], extraire le contenu de l'archive et copier le war généré par maven dans le dossier `webapps` de tomcat: `cp target/faq-netheos-0.0.1-SNAPSHOT.war <répertoire de tomcat>/webapps/faq-netheos.war`.
+
+Enfin exécuter la commande suivante: `./bin/catalina.sh start`
+
+Pour tester les différents appels d'API, vous pouvez utiliser le fichier `faq-netheos.postman_collection.json` qui est une collection postman.
+
+
+Vous pouvez aussi tester l'application directement depuis Intellij et utiliser le fichier de requêtes HTTP `faq-netheos.http`
+
+
