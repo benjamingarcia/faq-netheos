@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "59776ad1-356e-432c-a0d1-9625fe798edc",
+		"name": "faq-netheos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get faq",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a0fdde65-f5fe-4eda-bc1b-011c5e04b55b",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "gremlins",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "spike",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/faq-netheos/faq",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"faq-netheos",
+						"faq"
+					]
+				},
+				"description": "En tant qu'utilisateur ayant les droits \"administrateur\", je peux lister toutes les questions / réponses de la base de connaissances."
+			},
+			"response": []
+		},
+		{
+			"name": "add faq",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c99420e-d44e-4577-bad3-c68890f67555",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "gremlins",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "spike",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"answer\":\"ma troisième question\",\n\t\"question\":\"ma troisième reponse\",\n\t\"tags\":[\"scala\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/faq-netheos/faq",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"faq-netheos",
+						"faq"
+					]
+				},
+				"description": "En tant qu'utilisateur ayant les droits \"administrateur\", je peux insérer une question / réponse dans la base de connaissances (FAQ) du produit. Une question / réponse est définie par :\n\nLe libellé de la question ;\nLe libellé de la réponse ;\nLa liste des tags associés."
+			},
+			"response": []
+		},
+		{
+			"name": "search",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "mogwai",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "guizmo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/faq-netheos/faq/search?search=troisième",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"faq-netheos",
+						"faq",
+						"search"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "troisième"
+						}
+					]
+				},
+				"description": "En tant qu'utilisateur, je peux rechercher la réponse à une question sans avoir à saisir le texte exact correspondant à une question ou à une réponse de la base de connaissances.\n"
+			},
+			"response": []
+		}
+	]
+}

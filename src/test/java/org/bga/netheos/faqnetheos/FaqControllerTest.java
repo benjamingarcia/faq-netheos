@@ -26,7 +26,6 @@ public class FaqControllerTest {
     //Required to Generate JSON content from Java objects
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-
     @Autowired
     private FaqRepository faqRepository;
 
@@ -58,14 +57,12 @@ public class FaqControllerTest {
 
 
     @Test
-    public void testAddFaq() throws JsonProcessingException {
+    public void testAddFaqWithRightAccess() throws JsonProcessingException {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        //Creating http entity object with request body and headers
         HttpEntity<String> httpEntity =
                 new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(getStarWars()), requestHeaders);
 
-        //Invoking the API
         ResponseEntity<Faq> apiResponse = restTemplate
                 .withBasicAuth("spike", "gremlins")
                 .postForEntity("/faq", httpEntity, Faq.class);
@@ -75,7 +72,21 @@ public class FaqControllerTest {
     }
 
     @Test
-    public void testListFaq(){
+    public void testAddFaqWithWrongAccess() throws JsonProcessingException {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity =
+                new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(getStarWars()), requestHeaders);
+
+        ResponseEntity<Faq> apiResponse = restTemplate
+                .withBasicAuth("guizmo", "mogwai")
+                .postForEntity("/faq", httpEntity, Faq.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testListFaqWithRightAccess(){
         List apiResponse = restTemplate.withBasicAuth("spike", "gremlins")
                 .getForObject("/faq", List.class);
 
@@ -85,6 +96,15 @@ public class FaqControllerTest {
         assertEquals("what is java?", ((LinkedHashMap) apiResponse.get(1)).get("question"));
         assertEquals("what is kotlin?", ((LinkedHashMap) apiResponse.get(2)).get("question"));
 
+    }
+
+    @Test
+    public void testListFaqWithWrongAccess(){
+        ResponseEntity apiResponse = restTemplate.withBasicAuth("guizmo", "mogwai")
+                .getForEntity("/faq", Object.class);
+
+        assertNotNull(apiResponse);
+        assertEquals(HttpStatus.FORBIDDEN, apiResponse.getStatusCode());
     }
 
     @Test

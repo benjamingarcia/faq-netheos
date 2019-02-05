@@ -15,8 +15,12 @@ import java.util.stream.Collectors;
 @RestController
 public class FaqController {
 
+    private final FaqRepository faqRepository;
+
     @Autowired
-    private FaqRepository faqRepository;
+    public FaqController(FaqRepository faqRepository) {
+        this.faqRepository = faqRepository;
+    }
 
     @PostMapping(value = "/faq")
     public ResponseEntity<Object> addFaq(@RequestBody Faq faq){
